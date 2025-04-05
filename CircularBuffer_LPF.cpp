@@ -29,3 +29,18 @@ public:
         return output
     }
 };
+
+class SimpleReverb{
+    CircularBuffer delayline;
+    int delaySample;
+    float feedback;
+public:
+    SimpleReverb(int delaysize, float fb) : delayline(delaysize), delaySample(delaysize), feedback(fb){}
+    float process(float input){
+        float delayed = delayline.read(delaySample);
+        float output = input + delayed * 0.5f;
+        delayline.write(input + delayed * feedback);
+        return output;
+    }
+
+};
