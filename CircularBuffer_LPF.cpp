@@ -24,7 +24,7 @@ class LowPassFilter{
 public: 
     LowPassFilter(T alphaVal) : alpha(alphaVal){}
     T process(T input){
-        T output = alpha * input * (1-alpha) * prevOutput;
+        T output = alpha * input + (1-alpha) * prevOutput;
         prevOutput = output
         return output
     }
@@ -44,3 +44,28 @@ public:
     }
 
 };
+// Simulate audio processing
+template<typename T>
+void generateSineWave(std::vector<T>& signal, int samples, float freq, float sampleRate) {
+    for (int i = 0; i < samples; ++i) {
+        signal[i] = std::sin(2 * M_1_PI * freq * i / sampleRate);
+    }
+}
+
+int main() {
+    const int numSamples = 48000;
+    const float sampleRate = 48000.0f;
+    std::vector<float> input(numSamples);
+    generateSineWave(input, numSamples, 440.0f, sampleRate);
+
+    LowPassFilter<float> lpf(0.1f);
+    SimpleReverb reverb(1000, 0.4f);
+
+    for (int i = 0; i < numSamples; ++i) {
+        float filtered = lpf.process(input[i]);
+        float withReverb = reverb.process(filtered);
+        std::cout << withReverb << "\n"; // Output for testing
+    }
+
+    return 0;
+}
