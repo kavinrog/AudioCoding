@@ -44,7 +44,7 @@ public:
     }
 
 };
-// Simulate audio processing
+
 template<typename T>
 void generateSineWave(std::vector<T>& signal, int samples, float freq, float sampleRate) {
     for (int i = 0; i < samples; ++i) {
